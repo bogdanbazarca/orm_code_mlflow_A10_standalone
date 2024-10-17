@@ -1,7 +1,8 @@
 # **ORM_stack_a10_gpu_with_mlflow_and_jupyter**
 
-# **ORM Stack to deploy an A10* shape with one or more GPUs to test mlflow with jupyterlab**
+## **Oracle Resource Manager (ORM) Stack to deploy an A10* shape with one or more GPUs to test mlflow with jupyterlab**
 
+- [Prerequisites](#prerequisites)
 - [Intallation](#installation)
 - [Note](#note)
 - [System_monitoring](#system_monitoring)
@@ -10,11 +11,39 @@
 - [Mlflow Artifacts to OCI bucket](#storing-mlflow-artifacts-to-oci-bucket)
 
 
-## Installation
-- **you can use Resource Manager from OCI console to upload the code from here**
-- **once the instance is created, wait the cloud init completion and then you can allow firewall access to be able launch the jupyter notebook interface, commands detailed on both Oracle Linux and Ubuntu in the [Jupyter_access](#jupyter_access)**
+## Prerequisites
+- Virtual cloud network (VCN) and subnet. If you do not already have a VCN see [here](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/create_vcn.htm). For subnets, see [here](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/create_subnet.htm).
+- `customer_access_key` and `customer_secret_key`. If you don't already have these, then see [here](https://docs.oracle.com/en-us/iaas/Content/Identity/access/using-the-console.htm#create-customer-secret-key). Your secret key will only appear once. Save it in a password manager.
+- SSH Key. [link](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key). Tested with RSA only. Might work with ed25519?
+- Access to GPU. See [Limits, Quotas, and Usage](https://cloud.oracle.com/limits)
 
-- **Jupyter notebook has already configured triton_example_kernel environment** 
+## Installation
+- Create a stack from the ORM in Oracle Cloud Infrastructure (OCI). Use this [link](https://cloud.oracle.com/resourcemanager/stacks).
+- There are 3 steps to create a stack. Tips for each step:
+    - *Stack information*: Use this repo/directory for Terraform configuration source
+    - *Configure variables*: Select Oracle Linux for Operating System. Select 8 for Operating System Version.
+    - *Review*: Select "Run apply" under "Run apply on the created stack?"
+- If stack created properly, then you should see `VM_PRIV_IP` and `VM_PUB_IP` in Logs and Outputs. You will also have a new instance in [Instances](https://cloud.oracle.com/compute/instances)
+- Connect to the instance via SSH key. See previous step for `VM_PUB_IP`. On MacOS, you can do:
+
+    ```
+    ssh -i <path_to_private_ssh_key> opc@<VM_PUB_IP>
+    ```
+    When asked `Are you sure you want to continue connecting (yes/no/[fingerprint])?`, type `yes` and press enter.  You know you're successful when you're on the cloud instance command line `[opc@a10-gpu ~]$`.
+
+- Once the instance is created, the `cloudinit.sh` script will start running. Wait for cloud init completion. See [System Monitoring](#system_monitoring)
+- Allow firewall access to be able launch the jupyter notebook interface, commands detailed for both Oracle Linux and Ubuntu in the [Jupyter_access](#jupyter_access) section below.
+- Start Jupyter notebook and MLFlow in cloud instance
+    - Jupyter:
+        ```
+        jupyter notebook --ip=0.0.0.0 --port=8888 > ~/jupyter.log 2>&1 &
+        ```
+    - MLFlow:
+        ```
+        mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination
+        ```
+
+- **Jupyter notebook has already configured triton_example_kernel environment**
 - **you can create additional environmetns if needed and then if you need to switch between them go to Kernel -> Change kernel -> Select [new_example_that_you_create  or triton_example_kernel]**
 
 
@@ -36,7 +65,7 @@ monitor the system in general: sar 3 1000
 ## Jupyter_access
 ### Enable access to Jupyter on both Oracle Linux and Ubuntu:
 
-- **Oracle Linux:**
+- **Oracle Linux:** Run these commands in cloud instance
 ```
 sudo firewall-cmd --zone=public --permanent --add-port 8888/tcp && sudo firewall-cmd --zone=public --permanent --add-port 5000/tcp
 sudo firewall-cmd --reload
@@ -53,6 +82,7 @@ then cat jupyter.log to collect the token for the access
 /home/opc/miniconda3/envs/myenv/bin/mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination \$MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
 then cat mlflow.log to review information in case you need to check further details about mlflow activity
 ```
+
 - **Ubuntu:**
 ```
 sudo iptables -L
