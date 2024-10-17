@@ -12,9 +12,9 @@
 
 
 ## Prerequisites
-- Virtual cloud network (VCN) and subnet. If you do not already have a VCN see [here](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/create_vcn.htm). For subnets, see [here](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/create_subnet.htm).
-- `customer_access_key` and `customer_secret_key`. If you don't already have these, then see [here](https://docs.oracle.com/en-us/iaas/Content/Identity/access/using-the-console.htm#create-customer-secret-key). Your secret key will only appear once. Save it in a password manager.
-- SSH Key. [link](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key). Tested with RSA only. Might work with ed25519?
+- Virtual cloud network (VCN) and subnet. If you do not already have a VCN see [here](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/create_vcn.htm). Use the wizard by selecting "Start VCN Wizard." For subnets, see [here](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/create_subnet.htm).
+- `customer_access_key` and `customer_secret_key`. If you don't already have these, then see [here](https://docs.oracle.com/en-us/iaas/Content/Identity/access/using-the-console.htm#create-customer-secret-key). Record these keys in a password manager.
+- SSH Keys. [link](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key). Tested with RSA only. Might work with ed25519?
 - Access to GPU. See [Limits, Quotas, and Usage](https://cloud.oracle.com/limits)
 
 ## Installation
@@ -119,8 +119,3 @@ You need to change in mlflow_test_bucket.ipynb the following line: mlflow.set_tr
 Deployment depends on an [OCI Object Storage](https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/objectstorageoverview.htm) Bucket to store the artifacts.
 You can use an existing Bucket or let the automation create one for you.
 To access the bucket, Mlflow uses [Customer Secret Key](https://docs.oracle.com/en-us/iaas/Content/Rover/IAM/User_Credentials/Secret_Keys/customer-secret-key_management.htm).
-
-Steps:
-1. [Create a Secret Key](https://docs.oracle.com/en-us/iaas/Content/Rover/IAM/User_Credentials/Secret_Keys/create_customer-secret-key.htm#CreateCustomerSecretKey).
-2. Note down the secret key, you will use it in the **customer_secret_key** variable when deploying the Stack.
-3. Note down the access key, you will use it in the **customer_access_key** variable when deploying the Stack.
