@@ -127,7 +127,7 @@ su - ubuntu -c "
   conda install jupyter boto3 scikit-learn=1.5.1 -y; \
   pip install mlflow ipykernel; \
   python -m ipykernel install --user --name=myenv --display-name='Python (myenv)'; \
-  nohup bash -c 'source ~/.bashrc && jupyter notebook --ip=0.0.0.0 --port=8888' > ~/jupyter.log 2>&1 & \
+  nohup bash -c 'source ~/.bashrc && jupyter notebook --ip=0.0.0.0 --port=8888 > ~/jupyter.log 2>&1 & \
   nohup /home/ubuntu/miniconda3/envs/myenv/bin/mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination $MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
   echo "conda activate myenv" >> /home/ubuntu/.bashrc
 "
