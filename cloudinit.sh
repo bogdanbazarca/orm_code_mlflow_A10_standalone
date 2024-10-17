@@ -114,7 +114,7 @@ su - opc -c "/home/opc/miniconda3/bin/conda init bash && \
 su - opc -c "source /home/opc/miniconda3/etc/profile.d/conda.sh && \
   conda activate myenv && \
   nohup bash -c 'source ~/.bashrc && source ~/miniconda3/etc/profile.d/conda.sh && conda activate myenv && jupyter notebook --ip=0.0.0.0 --port=8888 > ~/jupyter.log 2>&1 & \
-  nohup /home/opc/miniconda3/envs/myenv/bin/mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination \$MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
+  nohup /home/opc/miniconda3/envs/myenv/bin/mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination $MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
   echo "conda activate myenv" >> /home/opc/.bashrc
   "
 
