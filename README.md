@@ -33,15 +33,20 @@
 
 - Once the instance is created, the `cloudinit.sh` script will start running. Wait for cloud init completion. See [System Monitoring](#system_monitoring)
 - Allow firewall access to be able launch the jupyter notebook interface, commands detailed for both Oracle Linux and Ubuntu in the [Jupyter_access](#jupyter_access) section below.
-- Start Jupyter notebook and MLFlow in cloud instance
+- Allow ingress on subnet used for instance. Add ingress rules for the following:
+    - Your own IP address (source = <your_ip_address>/32)
+    - Jupyter (source = <your_ip_address>/32, IP Protocol = TCP, Destintation Port Range = 8888)
+    - MLFlow (source = <your_ip_address>/32, IP Protocol = TCP, Destintation Port Range = 5000)
+- Start Jupyter notebook and MLFlow in cloud instance. Make sure you have activated the conda environment `myenv` with something like `conda activate myenv`. Then do:
     - Jupyter:
         ```
         jupyter notebook --ip=0.0.0.0 --port=8888 > ~/jupyter.log 2>&1 &
         ```
     - MLFlow:
         ```
-        mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination
+        mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination \$MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
         ```
+- Ensure that Jupyter notebook has `mlflow.set_tracking_uri("http://localhost:5000")`
 
 - **Jupyter notebook has already configured triton_example_kernel environment**
 - **you can create additional environmetns if needed and then if you need to switch between them go to Kernel -> Change kernel -> Select [new_example_that_you_create  or triton_example_kernel]**
@@ -70,7 +75,7 @@ monitor the system in general: sar 3 1000
 sudo firewall-cmd --zone=public --permanent --add-port 8888/tcp && sudo firewall-cmd --zone=public --permanent --add-port 5000/tcp
 sudo firewall-cmd --reload
 sudo firewall-cmd --list-all
-
+```
 !!! in case that you reboot the system you will need to manually start jupyter notebook and mlflow:
 make sure check the following files from /home/opc:
 
