@@ -1,6 +1,6 @@
 # **ORM_stack_a10_gpu_with_mlflow_and_jupyter**
 
-## **Oracle Resource Manager (ORM) Stack to deploy an A10* shape with one or more GPUs to test mlflow with jupyterlab**
+## **Oracle Resource Manager (ORM) Stack to deploy an A10* shape with one or more GPUs to test mlflow with jupyterlab*
 
 - [Prerequisites](#prerequisites)
 - [Intallation](#installation)
@@ -80,21 +80,26 @@ sudo firewall-cmd --list-all
 make sure check the following files from /home/opc:
 
 > jupyter.log contains details about jupyter
+```
 nohup jupyter notebook --ip=0.0.0.0 --port=8888' > ~/jupyter.log 2>&1 &
+```
 then cat jupyter.log to collect the token for the access
 
 > mlflow.log contains details about mlflow
-/home/opc/miniconda3/envs/myenv/bin/mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination \$MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
-then cat mlflow.log to review information in case you need to check further details about mlflow activity
 ```
+/home/opc/miniconda3/envs/myenv/bin/mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination \$MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
+```
+then cat mlflow.log to review information in case you need to check further details about mlflow activity
+
 
 - **Ubuntu:**
 ```
 sudo iptables -L
 sudo iptables -F
 sudo iptables-save > /dev/null
-
+```
 If this does not work do also this:
+```
 sudo systemctl stop iptables
 sudo systemctl disable iptables
 
@@ -103,18 +108,22 @@ sudo systemctl disable netfilter-persistent
 
 sudo iptables -F
 sudo iptables-save > /dev/null
-
+```
 !!! in case that you reboot the system you will need to manually start jupyter notebook and mlflow:
 make sure check the following files from /home/ubuntu:
 
 > jupyter.log contains details about jupyter
+```
 nohup jupyter notebook --ip=0.0.0.0 --port=8888 > ~jupyter.log 2>&1 &
+```
 then cat jupyter.log to collect the token for the access
 
 > mlflow.log contains details about mlflow
-nohup /home/ubuntu/miniconda3/envs/myenv/bin/mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination $MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
-then cat mlflow.log to review information in case you need to check further details about mlflow activity
 ```
+nohup /home/ubuntu/miniconda3/envs/myenv/bin/mlflow server --host 0.0.0.0 --port 5000 --artifacts-destination $MLFLOW_ARTIFACT_URI > ~/mlflow.log 2>&1 &
+```
+then cat mlflow.log to review information in case you need to check further details about mlflow activity
+
 ## Notebook:
 Both Ubuntu and Oracle Linux systems will create the notebook file mlflow_test_bucket.ipynb that contains the code to run experiments for mlflow. Once you allow access to Jupyter you will view the file in the list and you only need to double click on it and then a new tab will open its content.
 
