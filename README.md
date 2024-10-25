@@ -81,7 +81,7 @@ make sure check the following files from /home/opc:
 
 > jupyter.log contains details about jupyter
 ```
-nohup jupyter notebook --ip=0.0.0.0 --port=8888' > ~/jupyter.log 2>&1 &
+nohup jupyter notebook --ip=0.0.0.0 --port=8888  > ~/jupyter.log 2>&1 &
 ```
 then cat jupyter.log to collect the token for the access
 
